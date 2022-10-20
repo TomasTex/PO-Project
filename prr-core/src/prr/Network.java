@@ -14,6 +14,8 @@ import java.io.IOException;
 import prr.clients.Client;
 import prr.exceptions.DuplicateClientKeyException;
 import prr.exceptions.DuplicateTerminalKeyException;
+import prr.exceptions.InvalidFriendKeyException;
+import prr.exceptions.InvalidTerminalKeyException;
 import prr.exceptions.UnknownClientKeyException;
 import prr.exceptions.UnknownTerminalKeyException;
 import prr.exceptions.UnrecognizedEntryException;
@@ -33,11 +35,7 @@ public class Network implements Serializable {
 
 	private Map<String, Client> _clients = new TreeMap<>();
 	private Map<String, Terminal> _terminals = new TreeMap<>();
-
-        // FIXME define attributes
-        // FIXME define contructor(s)
-        // FIXME define methods
-
+	
 	/**
 	 * Read text input file and create corresponding domain entities.
 	 * 
@@ -53,7 +51,7 @@ public class Network implements Serializable {
 				String[] fields = line.split("\\|");
 				try {
 					registerFields(fields);
-				} catch (DuplicateClientKeyException | DuplicateTerminalKeyException | UnrecognizedEntryException | UnknownClientKeyException | UnknownTerminalKeyException e) {
+				} catch (DuplicateClientKeyException | DuplicateTerminalKeyException | UnrecognizedEntryException | UnknownClientKeyException | UnknownTerminalKeyException | InvalidFriendKeyException | InvalidTerminalKeyException e) {
 					// This should not happen.
 					e.printStackTrace();
 				}
@@ -102,7 +100,7 @@ public class Network implements Serializable {
 		return terminalList;
 	}
 
-	public void registerFields(String[] fields) throws UnrecognizedEntryException, DuplicateClientKeyException, UnknownClientKeyException, DuplicateTerminalKeyException, UnknownTerminalKeyException {
+	public void registerFields(String[] fields) throws UnrecognizedEntryException, DuplicateClientKeyException, UnknownClientKeyException, DuplicateTerminalKeyException, UnknownTerminalKeyException, InvalidFriendKeyException, InvalidTerminalKeyException {
 		switch (fields[0]) {
 			case "CLIENT" -> registerClient(fields);
 			case "FANCY", "BASIC" -> registerTerminal(fields);
@@ -119,8 +117,8 @@ public class Network implements Serializable {
 		_clients.put(client.getKey(), client);
 	}
 
-	// TODO figure out when a given _terminalKey is INVALID and throw the appropriate exception
-	public void registerTerminal(String[] fields) throws UnrecognizedEntryException, UnknownClientKeyException, DuplicateTerminalKeyException {
+	public void registerTerminal(String[] fields) throws UnrecognizedEntryException, UnknownClientKeyException, DuplicateTerminalKeyException, InvalidTerminalKeyException {
+		verifyTerminalKey(fields[1]);
 		if(_terminals.containsKey(fields[1])) {
 			throw new DuplicateTerminalKeyException(fields[1]);
 		}
@@ -135,13 +133,36 @@ public class Network implements Serializable {
 		holder.addTerminal(terminal);
 	}
 
-	public void registerFriends(String[] fields) throws UnknownTerminalKeyException {
+	public void registerFriends(String[] fields) throws UnknownTerminalKeyException, InvalidFriendKeyException {
 		Terminal main = fetchTerminalByKey(fields[1]);
 		String[] friendKeys = fields[2].split(",");
 		for (String key : friendKeys) {
+			if (key.equals(main.getKey())) { 
+				throw new InvalidFriendKeyException(key); 
+			}
 			main.addFriend(fetchTerminalByKey(key));
 		}
 		
+	}
+	/*
+	public boolean isValidTerminalKey(String key) {
+		if (key.length() != 6) { return false; }
+		try {
+			Integer.parseInt(key);
+		} catch (NumberFormatException e) { return false; }
+		return true;
+	}
+	*/
+
+	public void verifyTerminalKey(String key) throws InvalidTerminalKeyException {
+		if (key.length() != 6) {
+			throw new InvalidTerminalKeyException(key);
+		}
+		try {
+			Integer.parseInt(key);
+		} catch (NumberFormatException e) {
+			throw new InvalidTerminalKeyException(key);
+		}
 	}
 	
 }

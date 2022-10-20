@@ -91,10 +91,6 @@ abstract public class Terminal implements Serializable, Comparable<Terminal> /* 
                 _friends.put(friend.getKey(), friend);
         }
 
-        // FIXME define attributes
-        // FIXME define contructor(s)
-        // FIXME define methods
-
         /**
          * Checks if this terminal can end the current interactive communication.
          *

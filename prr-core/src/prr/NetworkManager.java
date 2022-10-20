@@ -29,7 +29,6 @@ public class NetworkManager implements Serializable {
 	private Network _network = new Network();
 	/** The name of the file containing the serialized network's state. */
 	private String _associatedFilename = null;
-        //FIXME addmore fields if needed
 
     public Network getNetwork() {
 		return _network;

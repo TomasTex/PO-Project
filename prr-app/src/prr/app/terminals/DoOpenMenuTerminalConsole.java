@@ -27,10 +27,5 @@ class DoOpenMenuTerminalConsole extends Command<Network> {
 		} catch (prr.exceptions.UnknownTerminalKeyException e) {
 			throw new UnknownTerminalKeyException(_terminalKey);
 		}
-				//// I THINK I DID THIS BUT IM NOT SURE
-                //FIXME implement command
-                // create an instance of prr.app.terminal.Menu with the
-                // selected Terminal
-				//// PLS CONFIRM
 	}
 }

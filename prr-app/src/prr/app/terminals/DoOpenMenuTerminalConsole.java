@@ -2,7 +2,6 @@ package prr.app.terminals;
 
 import prr.Network;
 import prr.app.exceptions.UnknownTerminalKeyException;
-import pt.tecnico.uilib.forms.Form;
 import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
 //FIXME add mode import if needed
@@ -12,20 +11,17 @@ import pt.tecnico.uilib.menus.CommandException;
  */
 class DoOpenMenuTerminalConsole extends Command<Network> {
 
-	private String _terminalKey;
-
 	DoOpenMenuTerminalConsole(Network receiver) {
 		super(Label.OPEN_MENU_TERMINAL, receiver);
-		//FIXME add command fields
+		addStringField("terminalKey", Prompt.terminalKey());
 	}
 
 	@Override
 	protected final void execute() throws CommandException {
 		try {
-			_terminalKey = Form.requestString(Prompt.terminalKey());
-			(new prr.app.terminal.Menu(_receiver, _receiver.fetchTerminalByKey(_terminalKey))).open();
+			(new prr.app.terminal.Menu(_receiver, _receiver.fetchTerminalByKey(stringField("terminalKey")))).open();
 		} catch (prr.exceptions.UnknownTerminalKeyException e) {
-			throw new UnknownTerminalKeyException(_terminalKey);
+			throw new UnknownTerminalKeyException(stringField("terminalKey"));
 		}
 	}
 }

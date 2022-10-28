@@ -20,11 +20,6 @@ class DoRegisterClient extends Command<Network> {
 
 	@Override
 	protected final void execute() throws CommandException {
-		/*
-        String _clientKey = Form.requestString(Prompt.key());
-		String _clientName = Form.requestString(Prompt.name());
-		String _clientTaxID = Form.requestString(Prompt.taxId());
-		*/
 
 		String[] fields = {"CLIENT", stringField("clientKey"), stringField("clientName"), stringField("clientTaxID")};
 		try {

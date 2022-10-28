@@ -25,17 +25,6 @@ class DoRegisterTerminal extends Command<Network> {
 
 	@Override
 	protected final void execute() throws CommandException {
-		/*
-        String _terminalKey = Form.requestString(Prompt.terminalKey());
-		if(!_receiver.isValidTerminalKey(_terminalKey)) { throw new InvalidTerminalKeyException(_terminalKey); }
-		//TODO change this to Option
-		String _terminalType = Form.requestString(Prompt.terminalType());
-		while (!_terminalType.equals("BASIC") && !_terminalType.equals("FANCY")) {
-			_terminalType = Form.requestString(Prompt.terminalType());
-		}
-		String _clientKey = Form.requestString(Prompt.clientKey());
-		*/
-		//String[] fields = {_terminalType, _terminalKey, _clientKey, "ON"};
 
 		String _terminalKey = stringField("terminalKey");
 		String _terminalType = optionField("terminalType");
@@ -62,13 +51,4 @@ class DoRegisterTerminal extends Command<Network> {
 			throw new prr.app.exceptions.InvalidTerminalKeyException(_terminalKey);
 		}
 	}
-
-	//TODO meter isto no core (network probably) e simplesmente chamar a partir da app de forma a nao ter logica nenhuma aqui
-	/*
-	public void verifyTerminalKey() throws InvalidTerminalKeyException {
-		if (!_receiver.isValidTerminalKey(stringField("terminalKey"))) {
-			throw new InvalidTerminalKeyException(stringField("terminalKey"));
-		}
-	}
-	*/
 }

@@ -1,12 +1,28 @@
 package prr.terminals;
 
+import prr.Network;
 import prr.clients.Client;
 import prr.exceptions.UnrecognizedEntryException;
 
 public class FancyTerminal extends Terminal {
     
-    public FancyTerminal(String key, Client client, String state) throws UnrecognizedEntryException {
-        super(key, client, state);
+    public FancyTerminal(String key, Client client, String state, Network network) throws UnrecognizedEntryException {
+        super(key, client, state, network);
+    }
+
+    @Override
+    public boolean canDoTextCommunication() {
+        return true;
+    }
+
+    @Override
+    public boolean canDoVoiceCommunication() {
+        return true;
+    }
+
+    @Override
+    public boolean canDoVideoCommunication() {
+        return true;
     }
 
     @Override

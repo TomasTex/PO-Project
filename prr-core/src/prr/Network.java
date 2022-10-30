@@ -35,6 +35,8 @@ public class Network implements Serializable {
 	private Map<String, Client> _clients = new TreeMap<>();
 	/** A map containing all known terminal keys as keys and all corresponding terminal objects as values. */
 	private Map<String, Terminal> _terminals = new TreeMap<>();
+	/** An integer detailing the unique identifier of the next initializable communication object. */
+	private int nextCommID = 1;
 	
 	/**
 	 * Read text input file and create corresponding domain entities.
@@ -185,8 +187,8 @@ public class Network implements Serializable {
 		Terminal terminal = null;
 		Client holder = fetchClientByKey(fields[2]);
 		switch(fields[0]) {
-			case "BASIC" -> terminal = new BasicTerminal(fields[1], holder, fields[3]);
-			case "FANCY" -> terminal = new FancyTerminal(fields[1], holder, fields[3]);
+			case "BASIC" -> terminal = new BasicTerminal(fields[1], holder, fields[3], this);
+			case "FANCY" -> terminal = new FancyTerminal(fields[1], holder, fields[3], this);
 			default -> throw new UnrecognizedEntryException(fields[0]);
 		}
 		_terminals.put(terminal.getKey(), terminal);
@@ -229,6 +231,32 @@ public class Network implements Serializable {
 		} catch (NumberFormatException e) {
 			throw new InvalidTerminalKeyException(key);
 		}
+	}
+
+	/**
+	 * Returns the appropriate unique identifier for a communication object.
+	 * 
+	 * @return the appropriate unique idenfifier.
+	 */
+	public int getCommID() {
+		return nextCommID++;
+	}
+
+	/**
+	 * Returns the total balance of every recognized entity in the network.
+	 * (Note: Since the Client class's getBalance() iterates over all of its
+	 * object's assigned terminals, iterating over all known clients in this
+	 * method is enough to guarantee that all entities in the network are
+	 * being taken into consideration.)
+	 * 
+	 * @return the total balance of the network, in credits.
+	 */
+	public long getGlobalBalance() {
+		long balance = 0;
+		for (Client client : getAllClients()) {
+			balance += client.getBalance();
+		}
+		return balance;
 	}
 	
 }

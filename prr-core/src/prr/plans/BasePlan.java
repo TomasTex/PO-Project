@@ -42,27 +42,31 @@ public class BasePlan extends Plan {
 
     @Override
     public long calculateVoiceCommPrice(Communication comm) {
+        long units = comm.getUnits();
         long price = 0;
         switch (comm.getSender().getClient().getClientType().toString()) {
-            case "NORMAL" -> price = 20;
-            case "GOLD" -> price = 10;
-            case "PLATINUM" -> price = 10;
+            case "NORMAL" -> price = 20 * units;
+            case "GOLD" -> price = 10 * units;
+            case "PLATINUM" -> price = 10* units;
             // FIXME swap this out for an exception later
             default -> System.out.println("[DEBUG] Unknown client type received in calculateVoiceCommPrice!");
         }
+        if (comm.getSender().isFriend(comm.getReceiver())) price *= 0.5;
         return price;
     }
 
     @Override
     public long calculateVideoCommPrice(Communication comm) {
+        long units = comm.getUnits();
         long price = 0;
         switch (comm.getSender().getClient().getClientType().toString()) {
-            case "NORMAL" -> price = 30;
-            case "GOLD" -> price = 20;
-            case "PLATINUM" -> price = 10;
+            case "NORMAL" -> price = 30 * units;
+            case "GOLD" -> price = 20 * units;
+            case "PLATINUM" -> price = 10 * units;
             // FIXME swap this out for an exception later
             default -> System.out.println("[DEBUG] Unknown client type received in calculateVideoCommPrice!");
         }
+        if (comm.getSender().isFriend(comm.getReceiver())) price *= 0.5;
         return price;
     }
 

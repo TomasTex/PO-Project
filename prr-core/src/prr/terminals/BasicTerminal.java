@@ -17,7 +17,7 @@ public class BasicTerminal extends Terminal {
 
     @Override
     public boolean canDoVoiceCommunication() {
-        return false;
+        return true;
     }
 
     @Override

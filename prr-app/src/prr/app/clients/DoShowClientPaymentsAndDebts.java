@@ -2,6 +2,7 @@ package prr.app.clients;
 
 import prr.Network;
 import prr.app.exceptions.UnknownClientKeyException;
+import prr.clients.Client;
 import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
 //FIXME add more imports if needed
@@ -13,11 +14,17 @@ class DoShowClientPaymentsAndDebts extends Command<Network> {
 
 	DoShowClientPaymentsAndDebts(Network receiver) {
 		super(Label.SHOW_CLIENT_BALANCE, receiver);
-		//FIXME add command fields
+		addStringField("clientKey", Prompt.key());
 	}
 
 	@Override
 	protected final void execute() throws CommandException {
-                //FIXME implement command
+		Client client = null;
+		try {
+			client = _receiver.fetchClientByKey(stringField("clientKey"));
+		} catch (prr.exceptions.UnknownClientKeyException e) {
+			throw new UnknownClientKeyException(stringField("clientKey"));
+		}
+        _display.popup(Message.clientPaymentsAndDebts(stringField("clientKey"), client.getPayments(), client.getDebts()));
 	}
 }

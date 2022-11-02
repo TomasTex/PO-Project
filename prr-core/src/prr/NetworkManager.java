@@ -31,9 +31,10 @@ public class NetworkManager implements Serializable {
 
 	/**
 	 * Retrieves the associated network.
+	 * 
 	 * @return the network itself.
 	 */
-    public Network getNetwork() {
+	public Network getNetwork() {
 		return _network;
 	}
 
@@ -41,10 +42,12 @@ public class NetworkManager implements Serializable {
 	 * Reads network data from a file corresponding to the given filename and
 	 * replaces the current network with the one stored in the file.
 	 * 
-	 * @param filename name of the file containing the serialized application's state
-     *        to load.
-	 * @throws UnavailableFileException if the specified file does not exist or there is
-     *         an error while processing this file.
+	 * @param filename name of the file containing the serialized application's
+	 *                 state
+	 *                 to load.
+	 * @throws UnavailableFileException if the specified file does not exist or
+	 *                                  there is
+	 *                                  an error while processing this file.
 	 */
 	public void load(String filename) throws UnavailableFileException {
 		_associatedFilename = filename;
@@ -56,11 +59,16 @@ public class NetworkManager implements Serializable {
 	}
 
 	/**
-     * Saves the serialized application's state into the file associated to the current network.
-     *
-	 * @throws FileNotFoundException if for some reason the file cannot be created or opened. 
-	 * @throws MissingFileAssociationException if the current network does not have a file.
-	 * @throws IOException if there is some error while serializing the state of the network to disk.
+	 * Saves the serialized application's state into the file associated to the
+	 * current network.
+	 *
+	 * @throws FileNotFoundException           if for some reason the file cannot be
+	 *                                         created or opened.
+	 * @throws MissingFileAssociationException if the current network does not have
+	 *                                         a file.
+	 * @throws IOException                     if there is some error while
+	 *                                         serializing the state of the network
+	 *                                         to disk.
 	 */
 	public void save() throws FileNotFoundException, MissingFileAssociationException, IOException {
 		if (_associatedFilename == null) {
@@ -76,9 +84,10 @@ public class NetworkManager implements Serializable {
 	}
 
 	/**
-    * Saves the serialized application's state into the specified file. The current network is
-    * associated to this file.
-    *
+	 * Saves the serialized application's state into the specified file. The current
+	 * network is
+	 * associated to this file.
+	 *
 	 * @param filename the name of the file.
 	 * @throws FileNotFoundException           if for some reason the file cannot be
 	 *                                         created or opened.
@@ -97,15 +106,18 @@ public class NetworkManager implements Serializable {
 	 * Read text input file and create domain entities.
 	 * 
 	 * @param filename name of the text input file.
-	 * @throws ImportFileException if for some reason the import process was done incorrectly or contained unrecognized fields.
-	 * @throws DuplicateClientKeyException if any new client keys are found to already exist within the network.
+	 * @throws ImportFileException         if for some reason the import process was
+	 *                                     done incorrectly or contained
+	 *                                     unrecognized fields.
+	 * @throws DuplicateClientKeyException if any new client keys are found to
+	 *                                     already exist within the network.
 	 */
 	public void importFile(String filename) throws ImportFileException {
 		try {
 			_network.importFile(filename);
 		} catch (IOException | UnrecognizedEntryException | DuplicateClientKeyException e) {
-				throw new ImportFileException(filename, e);
-    	}
+			throw new ImportFileException(filename, e);
+		}
 	}
 
 }

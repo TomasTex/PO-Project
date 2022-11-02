@@ -1,46 +1,52 @@
 package prr.terminals;
 
+import prr.exceptions.IllegalTerminalStateChangeException;
+import prr.exceptions.TerminalAlreadyOffException;
+
 public class OffState extends TerminalState {
 
-    public OffState(Terminal terminal) {
-        super(terminal);
+    public OffState(Terminal terminal, TerminalState lastState) {
+        super(terminal, lastState);
     }
 
     @Override
-    public void onNormalEnable() {
-        setLastState(this);
-        getTerminal().setState(new IdleState(getTerminal()));
+    public void onNormalEnable() throws IllegalTerminalStateChangeException {
+        getTerminal().setState(new IdleState(getTerminal(), this));
     }
 
     @Override
-    public void onSilentEnable() {
-        setLastState(this);
-        getTerminal().setState(new SilentState(getTerminal()));
+    public void onSilentEnable() throws IllegalTerminalStateChangeException {
+        getTerminal().setState(new SilentState(getTerminal(), this));
     }
 
     @Override
-    public void onDisable() {
+    public void onDisable() throws TerminalAlreadyOffException {
         // Doesn't do anything. Terminal is already off.
+        throw new TerminalAlreadyOffException();
     }
 
     @Override
-    public void onIdle() {
+    public void onIdle() throws IllegalTerminalStateChangeException {
         // Doesn't do anything. Terminal is not on.
+        throw new IllegalTerminalStateChangeException(this, new IdleState(getTerminal(), this));
     }
 
     @Override
-    public void onSilence() {
+    public void onSilence() throws IllegalTerminalStateChangeException {
         // Doesn't do anything. Terminal is not on.
+        throw new IllegalTerminalStateChangeException(this, new SilentState(getTerminal(), this));
     }
 
     @Override
-    public void onCommunicationStart() {
+    public void onCommunicationStart() throws IllegalTerminalStateChangeException {
         // Doesn't do anything. Terminal is not on.
+        throw new IllegalTerminalStateChangeException(this, new BusyState(getTerminal(), this));
     }
 
     @Override
-    public void onCommunicationEnd() {
+    public void onCommunicationEnd() throws IllegalTerminalStateChangeException {
         // Doesn't do anything. Terminal is not on.
+        throw new IllegalTerminalStateChangeException(this, new IdleState(getTerminal(), this));
     }
 
     @Override

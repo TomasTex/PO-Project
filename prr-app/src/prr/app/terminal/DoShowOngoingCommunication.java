@@ -1,6 +1,7 @@
 package prr.app.terminal;
 
 import prr.Network;
+import prr.exceptions.NullCommunicationException;
 import prr.terminals.Terminal;
 import pt.tecnico.uilib.menus.CommandException;
 //FIXME add more imports if needed
@@ -16,6 +17,10 @@ class DoShowOngoingCommunication extends TerminalCommand {
 
 	@Override
 	protected final void execute() throws CommandException {
-                //FIXME implement command
+        try {
+			_display.popup(_receiver.getCurrentCommunication());
+		} catch (NullCommunicationException e) {
+			_display.popup(Message.noOngoingCommunication());
+		}
 	}
 }

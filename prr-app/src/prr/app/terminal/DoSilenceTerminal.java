@@ -1,6 +1,8 @@
 package prr.app.terminal;
 
 import prr.Network;
+import prr.exceptions.IllegalTerminalStateChangeException;
+import prr.exceptions.TerminalAlreadySilentException;
 import prr.terminals.Terminal;
 import pt.tecnico.uilib.menus.CommandException;
 //FIXME add more imports if needed
@@ -16,6 +18,16 @@ class DoSilenceTerminal extends TerminalCommand {
 
 	@Override
 	protected final void execute() throws CommandException {
-                //FIXME implement command
+        try {
+			_receiver.turnOnSilently();
+		} catch (prr.exceptions.IllegalTerminalStateChangeException e) {
+			try {
+				_receiver.turnSilent();
+			} catch (IllegalTerminalStateChangeException e1) {
+				// Fail silently.
+			} catch (TerminalAlreadySilentException e1) {
+				_display.popup(Message.alreadySilent());
+			}
+		}
 	}
 }

@@ -2,6 +2,12 @@ package prr.terminals;
 
 import java.io.Serializable;
 
+import prr.exceptions.IllegalTerminalStateChangeException;
+import prr.exceptions.NullCommunicationException;
+import prr.exceptions.TerminalAlreadyIdleException;
+import prr.exceptions.TerminalAlreadyOffException;
+import prr.exceptions.TerminalAlreadySilentException;
+
 public abstract class TerminalState implements Serializable {
 
     /** Serial number for serialization. */
@@ -11,7 +17,10 @@ public abstract class TerminalState implements Serializable {
 
     private TerminalState _lastState;
 
-    public TerminalState(Terminal terminal) { _terminal = terminal; }
+    public TerminalState(Terminal terminal, TerminalState lastState) {
+        _lastState = lastState;
+        _terminal = terminal; 
+    }
 
     protected Terminal getTerminal() {
         return _terminal;
@@ -21,8 +30,8 @@ public abstract class TerminalState implements Serializable {
         return _lastState.toString();
     }
 
-    protected void setLastState(TerminalState lastState) {
-        _lastState = lastState;
+    public TerminalState getLastState() {
+        return _lastState;
     }
 
     public String getTerminalState() {
@@ -30,14 +39,14 @@ public abstract class TerminalState implements Serializable {
     }
 
     public abstract boolean canStartCommunication();
-    public abstract boolean canEndCurrentCommunication();
+    public abstract boolean canEndCurrentCommunication() throws NullCommunicationException;
 
-    public abstract void onNormalEnable();
-    public abstract void onSilentEnable();
-    public abstract void onDisable();
-    public abstract void onIdle();
-    public abstract void onSilence();
-    public abstract void onCommunicationStart();
-    public abstract void onCommunicationEnd();
+    public abstract void onNormalEnable() throws IllegalTerminalStateChangeException;
+    public abstract void onSilentEnable() throws IllegalTerminalStateChangeException;
+    public abstract void onDisable() throws IllegalTerminalStateChangeException, TerminalAlreadyOffException;
+    public abstract void onIdle() throws IllegalTerminalStateChangeException, TerminalAlreadyIdleException;
+    public abstract void onSilence() throws IllegalTerminalStateChangeException, TerminalAlreadySilentException;
+    public abstract void onCommunicationStart() throws IllegalTerminalStateChangeException;
+    public abstract void onCommunicationEnd() throws IllegalTerminalStateChangeException;
     
 }

@@ -18,8 +18,6 @@ class DoShowUnusedTerminals extends Command<Network> {
 	protected final void execute() throws CommandException {
 		// Há provavelmente uma forma melhor de se implementar isto, mas estou com
 		// medo de andar a import objetos da core para ao app portanto fica assim
-		for (Object terminal : _receiver.getUnusedTerminals()) {
-			_display.popup(terminal);
-		}
+		for (Object terminal : _receiver.getUnusedTerminals()) _display.popup(terminal);
 	}
 }

@@ -10,8 +10,8 @@ public class PlatinumClientType extends ClientType {
     public void update() {
         if(getClient().getBalance() < 0) {
             getClient().setClientType(new NormalClientType(getClient()));
-        //FIXME replace placeholder condition "true" with the actual condition which governs the change from Platinum state to Gold state
-        } else if (true) {
+        } else if (getClient().getConsecutiveTextCommsWithoutNegativeBalance() == 2) {
+            getClient().resetConsecutiveCommsWithoutNegativeBalance();
             getClient().setClientType(new GoldClientType(getClient()));
         }
     }

@@ -25,5 +25,10 @@ public class TextCommunication extends Communication {
     public void calculatePrice() {
        _price = getSender().getClient().getPlan().calculateTextCommPrice(this); 
     }
+
+    @Override
+    public String toString() {
+        return "TEXT|" + getID() + "|" + getSender().getKey() + "|" + getReceiver().getKey() + "|" + getUnits() + "|" + getPrice() + "|" + getStatus();
+    }
     
 }

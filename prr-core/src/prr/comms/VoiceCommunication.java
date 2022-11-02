@@ -17,6 +17,11 @@ public class VoiceCommunication extends Communication {
     }
 
     @Override
+    public void setDuration(long duration) {
+        _duration = duration;
+    }
+
+    @Override
     public void setUnits() {
         _units = _duration;
     }
@@ -24,6 +29,11 @@ public class VoiceCommunication extends Communication {
     @Override
     public void calculatePrice() {
         _price = getSender().getClient().getPlan().calculateVoiceCommPrice(this);
+    }
+
+    @Override
+    public String toString() {
+        return "VOICE|" + getID() + "|" + getSender().getKey() + "|" + getReceiver().getKey() + "|" + getUnits() + "|" + getPrice() + "|" + getStatus();
     }
     
 }

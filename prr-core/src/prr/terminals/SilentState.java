@@ -1,47 +1,51 @@
 package prr.terminals;
 
+import prr.exceptions.IllegalTerminalStateChangeException;
+import prr.exceptions.TerminalAlreadySilentException;
+
 public class SilentState extends TerminalState {
 
-    public SilentState(Terminal terminal) {
-        super(terminal);
+    public SilentState(Terminal terminal, TerminalState lastState) {
+        super(terminal, lastState);
     }
 
     @Override
-    public void onNormalEnable() {
+    public void onNormalEnable() throws IllegalTerminalStateChangeException {
         // Doesn't do anything. Terminal is already on.
+        throw new IllegalTerminalStateChangeException(this, new IdleState(getTerminal(), this));
     }
 
     @Override
-    public void onSilentEnable() {
+    public void onSilentEnable() throws IllegalTerminalStateChangeException {
         // Doesn't do anything. Terminal is already on.
+        throw new IllegalTerminalStateChangeException(this, new SilentState(getTerminal(), this));
     }
 
     @Override
-    public void onDisable() {
-        setLastState(this);
-        getTerminal().setState(new OffState(getTerminal()));
+    public void onDisable() throws IllegalTerminalStateChangeException {
+        getTerminal().setState(new OffState(getTerminal(), this));
     }
 
     @Override
-    public void onIdle() {
-        setLastState(this);
-        getTerminal().setState(new IdleState(getTerminal()));
+    public void onIdle() throws IllegalTerminalStateChangeException {
+        getTerminal().setState(new IdleState(getTerminal(), this));
     }
 
     @Override
-    public void onSilence() {
+    public void onSilence() throws TerminalAlreadySilentException {
         // Doesn't do anything. Terminal is already silent.
+        throw new TerminalAlreadySilentException();
     }
 
     @Override
-    public void onCommunicationStart() {
-        setLastState(this);
-        getTerminal().setState(new BusyState(getTerminal()));
+    public void onCommunicationStart() throws IllegalTerminalStateChangeException {
+        getTerminal().setState(new BusyState(getTerminal(), this));
     }
 
     @Override
-    public void onCommunicationEnd() {
+    public void onCommunicationEnd() throws IllegalTerminalStateChangeException {
         // Doesn't do anything. Silent terminals do not have ongoing communications.   
+        throw new IllegalTerminalStateChangeException(this, new SilentState(getTerminal(), this));
     }
 
     @Override
